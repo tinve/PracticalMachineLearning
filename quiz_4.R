@@ -104,11 +104,14 @@ testing = concrete[-inTrain,]
 
 set.seed(233)
 model = train(CompressiveStrength ~ ., method = 'lasso', data = training)
-plot(model$finalModel)
+plot(model$finalModel, xvar = c("penalty"))
 
 # The plot is hard to understand.  I choose 'Cement' as the variable since it spent the most
 # time away from zero...  (I am not sure this is the correct way to interprit this plot)
 
+# xvar = c("penalty") specifies that we want to plot parameters vs. penalty variable lambda
+# It still looks confusing, but I believe your interpretation still works. At least, Cement 
+# is a correct answer and it converges to zero last.
 
 # Question 4 --------------------------------------------------------------
 
@@ -143,7 +146,8 @@ model = svm(CompressiveStrength ~ ., data = training)
 model
 
 pred = predict(model, testing)
-RMSE = sqrt(sum((pred - testing$CompressiveStrength)^2))
+# you forgot to divide by number of measurements in RMSE formula. This gives the right answer RMSE = 6.71
+RMSE = sqrt(sum((pred - testing$CompressiveStrength)^2) / length(pred))  
 
 predins = predict(model, training)
 RMSEins = sqrt(sum((predins - training$CompressiveStrength)^2))
